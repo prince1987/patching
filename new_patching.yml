@@ -49,12 +49,6 @@
       pause: seconds=30
       when: machine_reboot.stdout == "reboot_needed"
 
-    - name: Wait for reboot to complete and SSH to become available
-      local_action: wait_for host={{ inventory_hostname }} port=22
-        state=started delay=30 timeout=180
-      retries: 30
-      delay: 10
-      when: machine_reboot.stdout == "reboot_needed"
     - name: it will check the kernel is updated or not.
       shell: New_kernel=$(uname -r);if [[ $(rpm -qa --last kernel|head -1|awk '{print $1}' | sed 's/kernel-//') == $New_kernel ]];then echo 'system_updated';else echo 'system_not_updated';fi
       ignore_errors: true
