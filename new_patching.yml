@@ -35,8 +35,7 @@
         msg: "reboot is required"
       when: machine_reboot.stdout == "reboot_needed"
       ignore_errors: true  
-         
-      
+            
     - name: Reboot Server if Necessary
       command: shutdown -r now "Ansible Updates Triggered"
       become: true
