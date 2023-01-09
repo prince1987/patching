@@ -67,7 +67,9 @@
     - name: Print system status
       debug:
         msg: "System Patched with Latest Kernel"       
-      when: system_ok.stdout == system_updated
+      when: system_ok.stdout == "system_updated"
+      ignore_errors: true
     - debug:
         msg: "System not Patched during this Play"
-      when: system_ok.stdout == system_not_updated         
+      when: system_ok.stdout == "system_not_updated"
+      ignore_errors: true
