@@ -39,7 +39,7 @@
     - name: Reboot Server if Necessary
       command: shutdown -r now "Ansible Updates Triggered"
       become: true
-      async: 0
+      async: 30
       poll: 0
       when: machine_reboot.stdout == "reboot_needed"
 
@@ -51,7 +51,7 @@
 
     - name: Wait for reboot to complete and SSH to become available
       local_action: wait_for host={{ inventory_hostname }} port=22
-        state=started delay=30 timeout=180
+        state=started delay=30 timeout=600
       retries: 30
       delay: 10
       when: machine_reboot.stdout == "reboot_needed"
