@@ -15,7 +15,7 @@
         state: latest
       register: yumcommandout
       when:
-        - (ansible_facts['distribution_major_version'] == 'Redhat')
+        - (ansible_facts['distribution_major_version'] == 'RedHat')
 
     - name: Print errors if yum failed
       debug:
