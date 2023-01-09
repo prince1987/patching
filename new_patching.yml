@@ -49,7 +49,6 @@
 
     # This pause is mandatory, otherwise the existing control connection
     # gets reused!
-    # (https://gist.github.com/infernix/a968f23c4f4e1d6723e4)
     - name: Pausing to allow server to shutdown and terminate our SSH connection
       pause: seconds=30
       when: machine_reboot.stdout == "reboot_needed"
@@ -67,9 +66,9 @@
     - name: Print system status
       debug:
         msg: "System Patched with Latest Kernel"       
-      when: system_ok.stdout == system_updated
+      when: system_ok.stdout == "system_updated"
       ignore_errors: true
     - debug:
         msg: "System not Patched during this Play"
-      when: system_ok.stdout == system_not_updated         
+      when: system_ok.stdout == "system_not_updated"         
       ignore_errors: true
