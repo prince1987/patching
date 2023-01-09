@@ -3,6 +3,8 @@
   hosts: all
   become: true
   tasks:
+    - name: take system backup 
+      shell: mkdir -p /var/tmp/Pre-Upgrade-Backup;df -hTP > /var/tmp/Pre-Upgrade-Backup/df-hTP.pre.out;cat /etc/fstab > /var/tmp/Pre-Upgrade-Backup/fstab.pre.out;rpm -qa > /var/tmp/Pre-Upgrade-Backup/rpm.pre.out;cp -rp /etc/exports /var/tmp/Pre-Upgrade-Backup/exports.pre.out;route -n > /var/tmp/Pre-Upgrade-Backup/route.pre.out;ifconfig -a > /var/tmp/Pre-Upgrade-Backup/ifconfig.pre.out;fdisk -l > /var/tmp/Pre-Upgrade-Backup/fdisk.pre.out;lsblk > /var/tmp/Pre-Upgrade-Backup/lsblk.pre.out;netstat -nrv > /var/tmp/Pre-Upgrade-Backup/netstat.pre.out;pvs > /var/tmp/Pre-Upgrade-Backup/pvs.pre.out;vgs > /var/tmp/Pre-Upgrade-Backup/vgs.pre.out;lvs > /var/tmp/Pre-Upgrade-Backup/lvs.pre.out;cp -p /etc/sysconfig/network-scripts/ifcfg-* /var/tmp/Pre-Upgrade-Backup/;cp -p /var/spool/cron/* /var/tmp/Pre-Upgrade-Backup/cron/;cat /etc/hosts > /var/tmp/Pre-Upgrade-Backup/hosts.pre.out;cat /etc/redhat-release > /var/tmp/Pre-Upgrade-Backup/release.pre.out;cat /etc/shadow  > /var/tmp/Pre-Upgrade-Backup/shadow.pre.out;cat /etc/gshadow  > /var/tmp/Pre-Upgrade-Backup/gshadow.pre.out;cat /etc/passwd  > /var/tmp/Pre-Upgrade-Backup/passwd.pre.out;cat /etc/group  > /var/tmp/Pre-Upgrade-Backup/group.pre.out;cat /etc/ssh/sshd_config > /var/tmp/Pre-Upgrade-Backup/sshd_config.pre.out;cat /etc/resolv.conf > /var/tmp/Pre-Upgrade-Backup/resolv.pre.out
     - name: upgrade packages via yum
       yum:
         name: "*"
