@@ -25,18 +25,18 @@
       
     - name: check if reboot required after kernel update.
       shell: KERNEL_NEW=$(rpm -q --last kernel | head -1 | awk '{print $1}' | sed 's/kernel-//'); KERNEL_NOW=$(uname -r); if [[ $KERNEL_NEW != $KERNEL_NOW ]]; then echo "reboot_needed"; else echo "reboot_not_needed"; fi
-      register: reboot_required
+      register: machine_reboot
     
     - name: if kernel is updated and reboot is not required
       debug: 
         msg: "reboot is not required"
-      when: reboot_required.stdout == "reboot_not_needed"
+      when: machine_reboot.stdout == "reboot_not_needed"
       ignore_errors: true 
 
     - name: if kernel is updated during the this patching and reboot is required
       debug: 
         msg: "reboot is required"
-      when: reboot_required.stdout == "reboot_needed"
+      when: machine_reboot.stdout == "reboot_needed"
       ignore_errors: true  
          
       
@@ -45,22 +45,29 @@
       become: true
       async: 30
       poll: 0
-      when: reboot_required.stdout == "reboot_needed"
+      when: machine_reboot.stdout == "reboot_needed"
 
     # This pause is mandatory, otherwise the existing control connection
     # gets reused!
     # (https://gist.github.com/infernix/a968f23c4f4e1d6723e4)
     - name: Pausing to allow server to shutdown and terminate our SSH connection
       pause: seconds=30
-      when: reboot_required.stdout == "reboot_needed"
+      when: machine_reboot.stdout == "reboot_needed"
 
     - name: Wait for reboot to complete and SSH to become available
       local_action: wait_for host={{ inventory_hostname }} port=22
         state=started delay=30 timeout=600
       retries: 30
       delay: 10
-      when: reboot_required.stdout == "reboot_needed"
+      when: machine_reboot.stdout == "reboot_needed"
     - name: it will check the kernel is updated or not.
-      shell: New_kernel=$(uname -r); if [[ $(rpm -qa --last kernel) != $New_kernel ]] ;then echo 'system updated';else echo 'system not updated';fi
+      shell: New_kernel=$(uname -r); if [[ $(rpm -qa --last kernel) != $New_kernel ]] ;then echo 'system_updated';else echo 'system_not_updated';fi
       ignore_errors: true
       register: system_ok
+    - name: Print system status
+      debug:
+        msg: "System Patched with Latest Kernel"       
+      when: system_ok.stdout == system_updated
+      debug:
+        msg: "System not Patched during this Play"
+      when: system_ok.stdout == system_not_updated         
