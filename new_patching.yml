@@ -1,5 +1,5 @@
 ---
-- name: Patch and reboot servers
+- name: Pre_check Patching and reboot servers
   hosts: all
   become: true
   tasks:
