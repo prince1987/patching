@@ -61,15 +61,15 @@
       delay: 10
       when: machine_reboot.stdout == "reboot_needed"
     - name: it will check the kernel is updated or not.
-      shell: New_kernel=$(uname -r); if [[ $(rpm -qa --last kernel) != $New_kernel ]] ;then echo 'system_updated';else echo 'system_not_updated';fi
+      shell: New_kernel=$(uname -r);if [[ $(rpm -qa --last kernel|head -1|awk '{print $1}' | sed 's/kernel-//') == $New_kernel ]];then echo 'system_updated';else echo 'system_not_updated';fi
       ignore_errors: true
       register: system_ok
     - name: Print system status
       debug:
         msg: "System Patched with Latest Kernel"       
-      when: system_ok.stdout == "system_updated"
+      when: system_ok.stdout == system_updated
       ignore_errors: true
     - debug:
         msg: "System not Patched during this Play"
-      when: system_ok.stdout == "system_not_updated"
+      when: system_ok.stdout == system_not_updated         
       ignore_errors: true
