@@ -1,17 +1,12 @@
 ---
 - name: Patch and reboot servers
   hosts: all
-  vars:
-    yum_name: "*"
-    yum_state:  latest
-    dnf_name: "*"
-    dnf_state: latest
+  become: true
   tasks:
-
     - name: upgrade packages via yum
       yum:
-        name={{ yum_name }}
-        state={{ yum_state }}
+        name: "*"
+        state: latest
       become: "yes"
       register: yumcommandout
       when:
