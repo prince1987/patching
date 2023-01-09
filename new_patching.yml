@@ -15,8 +15,7 @@
         state: latest
       register: yumcommandout
       when:
-        - (ansible_facts['distribution_major_version'] == '7') or
-          (ansible_facts['distribution_major_version'] == '8')
+        - (ansible_facts['distribution_major_version'] == 'Redhat')
 
     - name: Print errors if yum failed
       debug:
@@ -43,7 +42,7 @@
     - name: Reboot Server if Necessary
       command: shutdown -r now "Ansible Updates Triggered"
       become: true
-      async: 30
+      async: 0
       poll: 0
       when: machine_reboot.stdout == "reboot_needed"
 
