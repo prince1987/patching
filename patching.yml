@@ -69,7 +69,7 @@
     # gets reused!
     # (https://gist.github.com/infernix/a968f23c4f4e1d6723e4)
     - name: Pausing to allow server to shutdown and terminate our SSH connection
-      pause: seconds=30
+      pause: seconds=60
       when: result.rc == 1
 
     - name: Wait for reboot to complete and SSH to become available
